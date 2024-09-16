@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="music-player">
+            <nav>
+                <div class="circle">
+                    <i class="fa-solid fa-angle-left"></i>
+                </div>
+                <div class="circle">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
+            </nav>
+            <img src="/music-player/dessert-main-image-molten-cake-0fbd4f2.jpg" class="song-img" id="song-img">
+            <h1 id="song-title">Song Title</h1>
+            <p id="song-artist">Artist</p>
+
+            <audio controls id="song">
+                <source src="" type="audio/mpeg" id="song-source">
+            </audio>
+            <input type="range" value="0" id="progress">
+            <div class="controls">
+                <div onclick="prevSong()"><i class="fa-solid fa-backward"></i></div>
+                <div onclick="playPause()"><i class="fa-solid fa-play" id="ctrlIcon"></i></div>
+                <div onclick="nextSong()"><i class="fa-solid fa-forward"></i></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let progress = document.getElementById("progress");
+        let song = document.getElementById("song");
+        let ctrlIcon = document.getElementById("ctrlIcon");
+
+        let songs = [
+            {
+                title: "Woh Kisna Hai",
+                artist: "Artist 1",
+                file: "Woh_krishna.mp3",
+                image: "song1.jpg"
+            },
+            {
+                title: "Song 2",
+                artist: "Khesari lal",
+                file: "ak_favourite.mp3",
+                image: "https://images.pexels.com/photos/757889/pexels-photo-757889.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            },
+            {
+    title: "Death Bed",
+    artist: "Powfu",
+    image: "https://samplesongs.netlify.app/album-arts/death-bed.jpg",
+    file: "https://samplesongs.netlify.app/Death%20Bed.mp3",
+ 
+  },
+  {
+    title: "Bad Liar",
+    artist: "Imagine Dragons",
+    image: "https://samplesongs.netlify.app/album-arts/bad-liar.jpg",
+    file: "https://samplesongs.netlify.app/Bad%20Liar.mp3",
+   
+  },
+  {
+    title: "Faded",
+    artist: "Alan Walker",
+    image: "https://samplesongs.netlify.app/album-arts/faded.jpg",
+    file: "https://samplesongs.netlify.app/Faded.mp3",
+ 
+  },
+  {
+    title: "Hate Me",
+    artist: "Ellie Goulding",
+    image: "https://samplesongs.netlify.app/album-arts/hate-me.jpg",
+    file: "https://samplesongs.netlify.app/Hate%20Me.mp3",
+
+  },
+  {
+    title: "Solo",
+    artist: "Clean Bandit",
+    image: "https://samplesongs.netlify.app/album-arts/solo.jpg",
+    file: "https://samplesongs.netlify.app/Solo.mp3",
+ 
+  },
+  {
+    title: "Without Me",
+    artist: "Halsey",
+    image: "https://samplesongs.netlify.app/album-arts/without-me.jpg",
+    file: "https://samplesongs.netlify.app/Without%20Me.mp3",
+
+  }
+        ];
+
+        let currentSongIndex = 0;
+
+        function loadSong(index) {
+            let songTitle = document.getElementById('song-title');
+            let songArtist = document.getElementById('song-artist');
+            let songSource = document.getElementById('song-source');
+            let songImg = document.getElementById('song-img');
+            
+            let currentSong = songs[index];
+            
+            songTitle.innerText = currentSong.title;
+            songArtist.innerText = currentSong.artist;
+            songSource.src = currentSong.file;
+            songImg.src = currentSong.image;
+            song.load();  // reload the audio element with the new song
+        }
+
+        function playPause(){
+            if(ctrlIcon.classList.contains("fa-pause")){
+                song.pause();
+                ctrlIcon.classList.remove("fa-pause");
+                ctrlIcon.classList.add("fa-play");
+            }
+            else{
+                song.play();
+                ctrlIcon.classList.add("fa-pause");
+                ctrlIcon.classList.remove("fa-play");
+            }
+        }
+
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            loadSong(currentSongIndex);
+            song.play();
+            ctrlIcon.classList.add("fa-pause");
+            ctrlIcon.classList.remove("fa-play");
+        }
+
+        function prevSong() {
+            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            loadSong(currentSongIndex);
+            song.play();
+            ctrlIcon.classList.add("fa-pause");
+            ctrlIcon.classList.remove("fa-play");
+        }
+
+        song.onloadedmetadata = function(){
+            progress.max = song.duration;
+            progress.value = song.currentTime;
+        };
+
+        if(song.play()){
+            setInterval(()=>{
+                progress.value = song.currentTime;
+            },500);
+        }
+
+        progress.onchange=function(){
+            song.play();
+            song.currentTime = progress.value;
+            ctrlIcon.classList.add("fa-pause");
+            ctrlIcon.classList.remove("fa-play");
+        }
+
+        // Load the initial song
+        loadSong(currentSongIndex);
+    </script>
+</body>
+</html>
